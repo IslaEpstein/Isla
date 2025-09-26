@@ -1,44 +1,60 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Isla's Personal Profile</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <div class="container">
-    <header>
-      <img src="profile.jpg" alt="Profile Picture" class="profile-pic">
-      <div class="bio">
-        <h1>Hi, I'm Isla!</h1>
-        <p>
-          I’m passionate about <strong>alpine ski racing</strong> and <strong>soccer</strong>.  
-          I love competing, pushing myself to get faster, and being part of a team.  
-          When I’m not racing down the slopes or playing soccer, I enjoy spending time with my 
-          <strong>mini golden doodle named Milo 🐶</strong> and hanging out with my younger sister.  
-        </p>
-        <p>
-          I’m always looking for ways to improve both in sports and in life. Whether it’s training, 
-          learning new skills, or just having fun outdoors, I enjoy challenging myself.  
-          My dream is to keep getting better at skiing and soccer while also enjoying the journey along the way.  
-        </p>
-      </div>
-    </header>
+body {
+  font-family: Arial, sans-serif;
+  background-color: #c7aef5; /* soft purple */
+  margin: 0;
+  padding: 0;
+  color: #222;
+}
 
-    <section class="gallery">
-      <h2>My Photos</h2>
-      <div class="photos">
-        <img src="photo1.jpg" alt="Photo 1">
-        <img src="photo2.jpg" alt="Photo 2">
-        <img src="photo3.jpg" alt="Photo 3">
-        <img src="photo4.jpg" alt="Photo 4">
-        <img src="photo5.jpg" alt="Photo 5">
-        <img src="photo6.jpg" alt="Photo 6">
-        <img src="photo7.jpg" alt="Photo 7">
-        <img src="photo8.jpg" alt="Photo 8">
-      </div>
-    </section>
-  </div>
-</body>
-</html>
+.container {
+  max-width: 1000px;
+  margin: auto;
+  padding: 20px;
+}
+
+header {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 40px;
+}
+
+.profile-pic {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 20px;
+  border: 4px solid #6a4fbf;
+}
+
+.bio {
+  flex: 1;
+}
+
+.bio h1 {
+  margin-top: 0;
+  color: #4a2b9b;
+}
+
+.gallery {
+  text-align: center;
+}
+
+.gallery h2 {
+  color: #4a2b9b;
+  margin-bottom: 20px;
+}
+
+.photos {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.photos img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 3px solid #6a4fbf;
+}
