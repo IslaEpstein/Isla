@@ -1,4 +1,12 @@
-<!DOCTYPE html>
+import os
+import zipfile
+
+# Create a folder structure in a temporary directory
+folder_name = "/mnt/data/isla-website"
+os.makedirs(folder_name, exist_ok=True)
+
+# index.html content
+index_html = """<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -12,29 +20,56 @@
       <img src="profile.jpg" alt="Profile Picture" class="profile-pic">
       <div class="bio">
         <h1>Hi, I'm Isla!</h1>
-        <p>
-          I’m passionate about <strong>alpine ski racing</strong> and <strong>soccer</strong>.  
-          I ski at <strong>Waterville Valley</strong>, where I also go to school during the winter at  
-          <strong>Waterville Valley Academy</strong>. In the summer, I ski at <strong>Mt. Hood</strong>,  
-          and I’m a <strong>second-year U14</strong> skier. Over Thanksgiving, I usually head to Colorado to ski,  
-          and at Christmas I go to my grandparents’ house on my mom’s side, where I get to see my family.  
-        </p>
-        <p>
-          When I’m not skiing, I love going to the beach, spending time at sleepaway camp, or  
-          traveling with my family — I’ve been to Greece, England, and Mexico, and next year we’re  
-          going to Africa! Every summer we go on a family trip somewhere new.  
-        </p>
-        <p>
-          Outside of skiing, I play <strong>soccer</strong> for both school and club. I also babysit my baby cousins,  
-          and I turned <strong>13 on September 6</strong>! 🎉 Before Christmas, I always have a  
-          cookie-decorating party with friends, and on Easter my parents hide eggs for me and my sister to find  
-          before we open our baskets.  
-        </p>
-        <p>
-          I also have a <strong>mini golden doodle named Milo 🐶</strong>, and I love spending time with him  
-          and my younger sister. Being in seventh grade keeps me busy, but I’m always excited for the  
-          adventures that come with school, sports, and family.  
-        </p>
+
+        <section>
+          <h2>About Me</h2>
+          <p>
+            I’m 13 years old (my birthday is September 6 🎉) and I’m in seventh grade.  
+            I love <strong>alpine ski racing</strong> and <strong>soccer</strong>, and I’m always working hard to improve.  
+            I’m also a <strong>second-year U14 skier</strong>, which keeps me busy with training and races.  
+          </p>
+        </section>
+
+        <section>
+          <h2>Skiing</h2>
+          <p>
+            In the winter, I ski at <strong>Waterville Valley</strong> and attend  
+            <strong>Waterville Valley Academy</strong>. Over Thanksgiving I travel to Colorado to ski,  
+            and in the summer I train at <strong>Mt. Hood</strong>. Skiing is a huge part of my life,  
+            and I love the feeling of flying down the mountain.  
+          </p>
+        </section>
+
+        <section>
+          <h2>Soccer</h2>
+          <p>
+            I play soccer for both school and club. I enjoy being part of a team, competing in games,  
+            and always working to get faster and stronger.  
+          </p>
+        </section>
+
+        <section>
+          <h2>Family & Traditions</h2>
+          <p>
+            I live with my younger sister, and we always have fun together.  
+            I also have a <strong>mini golden doodle named Milo 🐶</strong>, who is always making me smile.  
+          </p>
+          <p>
+            Family traditions are really important to me. Every Christmas, we go to my grandparents’ house  
+            on my mom’s side, and I get to spend time with my cousins (I usually babysit the younger ones).  
+            Before Christmas, I always host a cookie-decorating party. On Easter, my parents hide eggs  
+            for me and my sister to find before we open our baskets.  
+          </p>
+        </section>
+
+        <section>
+          <h2>Adventures</h2>
+          <p>
+            In the summer, I go to sleepaway camp, love visiting the beach, and travel with my family.  
+            We’ve been to <strong>Greece, England, and Mexico</strong>, and next year we’re going to  
+            <strong>Africa</strong>! Each summer we pick a new place to explore.  
+          </p>
+        </section>
       </div>
     </header>
 
@@ -53,4 +88,99 @@
     </section>
   </div>
 </body>
-</html>
+</html>"""
+
+# style.css content
+style_css = """body {
+  font-family: Arial, sans-serif;
+  background-color: #b19cd9; /* pretty purple */
+  margin: 0;
+  padding: 0;
+  color: #222;
+}
+
+.container {
+  max-width: 1100px;
+  margin: auto;
+  padding: 20px;
+}
+
+header {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 40px;
+  background: #e6ddff;
+  padding: 20px;
+  border-radius: 15px;
+}
+
+.profile-pic {
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 25px;
+  border: 4px solid #6a4fbf;
+}
+
+.bio {
+  flex: 1;
+}
+
+.bio h1 {
+  margin-top: 0;
+  color: #4a2b9b;
+}
+
+.bio h2 {
+  margin-bottom: 8px;
+  color: #5b3dc4;
+  border-bottom: 2px solid #6a4fbf;
+  display: inline-block;
+  padding-bottom: 3px;
+}
+
+.gallery {
+  text-align: center;
+}
+
+.gallery h2 {
+  color: #4a2b9b;
+  margin-bottom: 20px;
+}
+
+.photos {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.photos img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 3px solid #6a4fbf;
+  transition: transform 0.2s;
+}
+
+.photos img:hover {
+  transform: scale(1.05);
+}"""
+
+# Write files
+with open(os.path.join(folder_name, "index.html"), "w") as f:
+    f.write(index_html)
+
+with open(os.path.join(folder_name, "style.css"), "w") as f:
+    f.write(style_css)
+
+# Create zip file
+zip_path = "/mnt/data/isla-website.zip"
+with zipfile.ZipFile(zip_path, 'w') as zipf:
+    for root, dirs, files in os.walk(folder_name):
+        for file in files:
+            file_path = os.path.join(root, file)
+            zipf.write(file_path, os.path.relpath(file_path, folder_name))
+
+zip_path
