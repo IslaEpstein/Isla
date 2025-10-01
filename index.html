@@ -120,24 +120,45 @@
   </div>
 </body>
   <section>
-  <h2>Mini Ski Game ⛷️</h2>
-  <p>Use the ⬅️ and ➡️ arrow keys to move your skier and dodge the trees!</p>
-  <canvas id="skiGame" width="400" height="500" style="border:3px solid #4a2b90; background:#ffffff; border-radius:12px;"></canvas>
+<section style="text-align:center; margin-top:40px;">
+  <h2 style="color:#4a2b90;">🎿 Mini Ski Game 🎿</h2>
+  <p style="font-size:16px; color:#333;">
+    Use the ⬅️ and ➡️ arrow keys to move your skier and dodge the trees! <br>
+    Survive as long as possible to increase your score.
+  </p>
+  <canvas id="skiGame" width="400" height="500" 
+          style="border:3px solid #4a2b90; background:#ffffff; border-radius:12px; display:block; margin:auto;">
+  </canvas>
+  <h3 id="scoreDisplay" style="color:#4a2b90; margin-top:10px;">Score: 0</h3>
+  <button id="restartBtn" 
+          style="margin-top:15px; padding:10px 20px; font-size:16px; background:#4a2b90; color:white; border:none; border-radius:8px; cursor:pointer; display:none;">
+    🔄 Play Again
+  </button>
 </section>
 
 <script>
   const canvas = document.getElementById("skiGame");
   const ctx = canvas.getContext("2d");
+  const restartBtn = document.getElementById("restartBtn");
+  const scoreDisplay = document.getElementById("scoreDisplay");
 
-  let skier = { x: 180, y: 420, size: 30, color: "#4a2b90" };
-  let trees = [];
-  let score = 0;
-  let gameOver = false;
+  let skier, trees, score, gameOver;
+
+  function initGame() {
+    skier = { x: 185, y: 450, size: 30, color: "#4a2b90" };
+    trees = [];
+    score = 0;
+    gameOver = false;
+    restartBtn.style.display = "none";
+    gameLoop();
+  }
 
   // Move skier
   document.addEventListener("keydown", (e) => {
-    if (e.key === "ArrowLeft" && skier.x > 0) skier.x -= 20;
-    if (e.key === "ArrowRight" && skier.x < canvas.width - skier.size) skier.x += 20;
+    if (!gameOver) {
+      if (e.key === "ArrowLeft" && skier.x > 0) skier.x -= 25;
+      if (e.key === "ArrowRight" && skier.x < canvas.width - skier.size) skier.x += 25;
+    }
   });
 
   function drawSkier() {
@@ -145,15 +166,24 @@
     ctx.beginPath();
     ctx.arc(skier.x + skier.size / 2, skier.y, skier.size / 2, 0, Math.PI * 2);
     ctx.fill();
+
+    // little skis
+    ctx.strokeStyle = "#000";
+    ctx.beginPath();
+    ctx.moveTo(skier.x, skier.y + 10);
+    ctx.lineTo(skier.x - 10, skier.y + 20);
+    ctx.moveTo(skier.x + skier.size, skier.y + 10);
+    ctx.lineTo(skier.x + skier.size + 10, skier.y + 20);
+    ctx.stroke();
   }
 
   function drawTrees() {
-    ctx.fillStyle = "green";
     trees.forEach((tree) => {
+      ctx.fillStyle = "green";
       ctx.beginPath();
       ctx.moveTo(tree.x, tree.y);
-      ctx.lineTo(tree.x + 20, tree.y + 40);
-      ctx.lineTo(tree.x - 20, tree.y + 40);
+      ctx.lineTo(tree.x + 15, tree.y + 30);
+      ctx.lineTo(tree.x - 15, tree.y + 30);
       ctx.closePath();
       ctx.fill();
     });
@@ -161,50 +191,53 @@
 
   function updateTrees() {
     trees.forEach((tree) => {
-      tree.y += 5;
-      // Collision check
-      if (
-        tree.y + 40 > skier.y &&
-        tree.x < skier.x + skier.size &&
-        tree.x > skier.x - skier.size
-      ) {
-        gameOver = true;
-      }
+      tree.y += 5; // speed
     });
+    trees = trees.filter(tree => tree.y < canvas.height);
 
-    // Remove trees off screen
-    trees = trees.filter((tree) => tree.y < canvas.height);
-
-    // Add new trees
-    if (Math.random() < 0.03) {
-      let treeX = Math.random() * (canvas.width - 40) + 20;
-      trees.push({ x: treeX, y: -40 });
+    if (Math.random() < 0.05) {
+      let x = Math.random() * (canvas.width - 30) + 15;
+      trees.push({ x: x, y: -30 });
     }
   }
 
-  function drawScore() {
-    ctx.fillStyle = "#4a2b90";
-    ctx.font = "18px Arial";
-    ctx.fillText("Score: " + score, 10, 20);
+  function checkCollision() {
+    for (let tree of trees) {
+      if (
+        skier.x < tree.x + 15 &&
+        skier.x + skier.size > tree.x - 15 &&
+        skier.y < tree.y + 30 &&
+        skier.y + skier.size > tree.y
+      ) {
+        gameOver = true;
+        restartBtn.style.display = "inline-block";
+      }
+    }
   }
 
   function gameLoop() {
     if (gameOver) {
-      ctx.fillStyle = "rgba(0,0,0,0.5)";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = "#fff";
-      ctx.font = "28px Arial";
-      ctx.fillText("Game Over!", 130, 250);
-      ctx.fillText("Final Score: " + score, 120, 290);
+      ctx.fillStyle = "red";
+      ctx.font = "30px Arial";
+      ctx.fillText("Game Over!", 120, 250);
       return;
     }
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
     drawSkier();
     drawTrees();
     updateTrees();
-    drawScore();
+    checkCollision();
 
+    // Update score
     score++;
-    requestAnimationFrame(gameLoop
-</html>
+    scoreDisplay.textContent = "Score: " + score;
+
+    requestAnimationFrame(gameLoop);
+  }
+
+  restartBtn.addEventListener("click", initGame);
+
+  initGame();
+</script>
