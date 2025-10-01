@@ -1,269 +1,121 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Isla's Personal Profile</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #e6d6f5; /* light purple */
-      margin: 0;
-      color: #333;
-      overflow-x: hidden;
-    }
-    /* Navigation bar */
-    nav {
-      background: #4a2b90;
-      padding: 10px 0;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-    }
-    nav ul {
-      list-style: none;
-      display: flex;
-      justify-content: center;
-      margin: 0;
-      padding: 0;
-    }
-    nav ul li {
-      margin: 0 15px;
-    }
-    nav ul li a {
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-      font-size: 16px;
-    }
-    nav ul li a:hover {
-      text-decoration: underline;
-    }
-    /* Container */
-    .container {
-      max-width: 1000px;
-      margin: auto;
-      padding: 20px;
-      position: relative;
-      z-index: 1;
-    }
-    h2 {
-      color: #4a2b90;
-      border-bottom: 2px solid #a46bd1;
-      padding-bottom: 5px;
-      margin-top: 25px;
-    }
-    /* Gallery */
-    .gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px;
-      margin-top: 20px;
-    }
-    .gallery img {
-      width: 100%;
-      height: 220px;
-      object-fit: cover;
-      border-radius: 12px;
-      border: 3px solid #a46bd1;
-      transition: transform 0.2s;
-    }
-    .gallery img:hover {
-      transform: scale(1.05);
-    }
-    /* Snowflakes */
-    .snowflake {
-      position: fixed;
-      top: -10px;
-      color: white;
-      font-size: 20px;
-      pointer-events: none;
-      animation: fall linear infinite;
-    }
-    @keyframes fall {
-      to {
-        transform: translateY(110vh);
-      }
-    }
-  </style>
-</head>
-<body>
-  <!-- Navigation -->
-  <nav>
-    <ul>
-      <li><a href="#about">About Me</a></li>
-      <li><a href="#skiing">Skiing</a></li>
-      <li><a href="#soccer">Soccer</a></li>
-      <li><a href="#photos">Photos</a></li>
-      <li><a href="#game">Game</a></li>
-    </ul>
-  </nav>
+<section style="text-align:center; margin-top:40px;">
+  <h2 style="color:#4a2b90;">🎿 Mini Ski Game 🎿</h2>
+  <p style="font-size:16px; color:#333;">
+    Use the ⬅️ and ➡️ arrow keys to move your skier and dodge the trees! <br>
+    Survive as long as possible to increase your score.
+  </p>
+  <canvas id="skiGame" width="400" height="500" 
+          style="border:3px solid #4a2b90; background:#ffffff; border-radius:12px; display:block; margin:auto;">
+  </canvas>
+  <h3 id="scoreDisplay" style="color:#4a2b90; margin-top:10px;">Score: 0</h3>
+  <button id="restartBtn" 
+          style="margin-top:15px; padding:10px 20px; font-size:16px; background:#4a2b90; color:white; border:none; border-radius:8px; cursor:pointer; display:none;">
+    🔄 Play Again
+  </button>
+</section>
 
-  <div class="container">
-    <!-- Example sections -->
-    <section id="about">
-      <h2>About Me</h2>
-      <p>Hi, I’m Isla! I’m 13 years old, in seventh grade, and I love alpine ski racing and soccer. ⛷️⚽</p>
-    </section>
+<script>
+  const canvas = document.getElementById("skiGame");
+  const ctx = canvas.getContext("2d");
+  const restartBtn = document.getElementById("restartBtn");
+  const scoreDisplay = document.getElementById("scoreDisplay");
 
-    <section id="skiing">
-      <h2>Skiing</h2>
-      <p>I train at Waterville Valley and Mt. Hood in the summer. Over Thanksgiving I ski in Colorado.</p>
-    </section>
+  let skier, trees, score, gameOver;
 
-    <section id="soccer">
-      <h2>Soccer</h2>
-      <p>I play soccer for both my school and club. I love competing and being part of a team.</p>
-    </section>
+  function initGame() {
+    skier = { x: 185, y: 450, size: 30, color: "#4a2b90" };
+    trees = [];
+    score = 0;
+    gameOver = false;
+    restartBtn.style.display = "none";
+    gameLoop();
+  }
 
-    <section id="photos">
-      <h2>My Photos</h2>
-      <div class="gallery">
-        <img src="photo1.jpg" alt="Photo 1">
-        <img src="photo2.jpg" alt="Photo 2">
-        <img src="photo3.jpg" alt="Photo 3">
-        <img src="photo4.jpg" alt="Photo 4">
-      </div>
-    </section>
-
-    <!-- Game Section -->
-    <section id="game" style="text-align:center; margin-top:40px;">
-      <h2 style="color:#4a2b90;">🎿 Mini Ski Game 🎿</h2>
-      <p style="font-size:16px; color:#333;">
-        Use the ⬅️ and ➡️ arrow keys to move your skier and dodge the trees! <br>
-        Survive as long as possible to increase your score.
-      </p>
-      <canvas id="skiGame" width="400" height="500" 
-              style="border:3px solid #4a2b90; background:#ffffff; border-radius:12px; display:block; margin:auto;">
-      </canvas>
-      <h3 id="scoreDisplay" style="color:#4a2b90; margin-top:10px;">Score: 0</h3>
-      <h3 id="highScoreDisplay" style="color:#a46bd1;">High Score: 0</h3>
-      <button id="restartBtn" 
-              style="margin-top:15px; padding:10px 20px; font-size:16px; background:#4a2b90; color:white; border:none; border-radius:8px; cursor:pointer; display:none;">
-        🔄 Play Again
-      </button>
-    </section>
-  </div>
-
-  <script>
-    // Ski Game with Leaderboard
-    const canvas = document.getElementById("skiGame");
-    const ctx = canvas.getContext("2d");
-    const restartBtn = document.getElementById("restartBtn");
-    const scoreDisplay = document.getElementById("scoreDisplay");
-    const highScoreDisplay = document.getElementById("highScoreDisplay");
-
-    let skier, trees, score, gameOver;
-    let highScore = localStorage.getItem("skiHighScore") || 0;
-    highScoreDisplay.textContent = "High Score: " + highScore;
-
-    function initGame() {
-      skier = { x: 185, y: 450, size: 30, color: "#4a2b90" };
-      trees = [];
-      score = 0;
-      gameOver = false;
-      restartBtn.style.display = "none";
-      gameLoop();
+  // Move skier
+  document.addEventListener("keydown", (e) => {
+    if (!gameOver) {
+      if (e.key === "ArrowLeft" && skier.x > 0) skier.x -= 25;
+      if (e.key === "ArrowRight" && skier.x < canvas.width - skier.size) skier.x += 25;
     }
+  });
 
-    document.addEventListener("keydown", (e) => {
-      if (!gameOver) {
-        if (e.key === "ArrowLeft" && skier.x > 0) skier.x -= 25;
-        if (e.key === "ArrowRight" && skier.x < canvas.width - skier.size) skier.x += 25;
-      }
-    });
+  function drawSkier() {
+    ctx.fillStyle = skier.color;
+    ctx.beginPath();
+    ctx.arc(skier.x + skier.size / 2, skier.y, skier.size / 2, 0, Math.PI * 2);
+    ctx.fill();
 
-    function drawSkier() {
-      ctx.fillStyle = skier.color;
+    // little skis
+    ctx.strokeStyle = "#000";
+    ctx.beginPath();
+    ctx.moveTo(skier.x, skier.y + 10);
+    ctx.lineTo(skier.x - 10, skier.y + 20);
+    ctx.moveTo(skier.x + skier.size, skier.y + 10);
+    ctx.lineTo(skier.x + skier.size + 10, skier.y + 20);
+    ctx.stroke();
+  }
+
+  function drawTrees() {
+    trees.forEach((tree) => {
+      ctx.fillStyle = "green";
       ctx.beginPath();
-      ctx.arc(skier.x + skier.size / 2, skier.y, skier.size / 2, 0, Math.PI * 2);
+      ctx.moveTo(tree.x, tree.y);
+      ctx.lineTo(tree.x + 15, tree.y + 30);
+      ctx.lineTo(tree.x - 15, tree.y + 30);
+      ctx.closePath();
       ctx.fill();
+    });
+  }
+
+  function updateTrees() {
+    trees.forEach((tree) => {
+      tree.y += 5; // speed
+    });
+    trees = trees.filter(tree => tree.y < canvas.height);
+
+    if (Math.random() < 0.05) {
+      let x = Math.random() * (canvas.width - 30) + 15;
+      trees.push({ x: x, y: -30 });
     }
+  }
 
-    function drawTrees() {
-      trees.forEach((tree) => {
-        ctx.fillStyle = "green";
-        ctx.beginPath();
-        ctx.moveTo(tree.x, tree.y);
-        ctx.lineTo(tree.x + 15, tree.y + 30);
-        ctx.lineTo(tree.x - 15, tree.y + 30);
-        ctx.closePath();
-        ctx.fill();
-      });
-    }
-
-    function updateTrees() {
-      trees.forEach((tree) => { tree.y += 5; });
-      trees = trees.filter(tree => tree.y < canvas.height);
-
-      if (Math.random() < 0.05) {
-        let x = Math.random() * (canvas.width - 30) + 15;
-        trees.push({ x: x, y: -30 });
+  function checkCollision() {
+    for (let tree of trees) {
+      if (
+        skier.x < tree.x + 15 &&
+        skier.x + skier.size > tree.x - 15 &&
+        skier.y < tree.y + 30 &&
+        skier.y + skier.size > tree.y
+      ) {
+        gameOver = true;
+        restartBtn.style.display = "inline-block";
       }
     }
+  }
 
-    function checkCollision() {
-      for (let tree of trees) {
-        if (
-          skier.x < tree.x + 15 &&
-          skier.x + skier.size > tree.x - 15 &&
-          skier.y < tree.y + 30 &&
-          skier.y + skier.size > tree.y
-        ) {
-          gameOver = true;
-          restartBtn.style.display = "inline-block";
-
-          // Save high score
-          if (score > highScore) {
-            highScore = score;
-            localStorage.setItem("skiHighScore", highScore);
-          }
-          highScoreDisplay.textContent = "High Score: " + highScore;
-        }
-      }
+  function gameLoop() {
+    if (gameOver) {
+      ctx.fillStyle = "red";
+      ctx.font = "30px Arial";
+      ctx.fillText("Game Over!", 120, 250);
+      return;
     }
 
-    function gameLoop() {
-      if (gameOver) {
-        ctx.fillStyle = "red";
-        ctx.font = "30px Arial";
-        ctx.fillText("Game Over!", 120, 250);
-        return;
-      }
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawSkier();
+    drawTrees();
+    updateTrees();
+    checkCollision();
 
-      drawSkier();
-      drawTrees();
-      updateTrees();
-      checkCollision();
+    // Update score
+    score++;
+    scoreDisplay.textContent = "Score: " + score;
 
-      score++;
-      scoreDisplay.textContent = "Score: " + score;
+    requestAnimationFrame(gameLoop);
+  }
 
-      requestAnimationFrame(gameLoop);
-    }
+  restartBtn.addEventListener("click", initGame);
 
-    restartBtn.addEventListener("click", initGame);
-
-    initGame();
-
-    // Snowflake Background
-    function createSnowflake() {
-      const snowflake = document.createElement("div");
-      snowflake.classList.add("snowflake");
-      snowflake.textContent = "❄";
-      snowflake.style.left = Math.random() * window.innerWidth + "px";
-      snowflake.style.animationDuration = Math.random() * 3 + 2 + "s";
-      snowflake.style.opacity = Math.random();
-      snowflake.style.fontSize = Math.random() * 10 + 10 + "px";
-      document.body.appendChild(snowflake);
-
-      setTimeout(() => {
-        snowflake.remove();
-      }, 5000);
-    }
-    setInterval(createSnowflake, 200);
-  </script>
-</body>
-</html>
+  initGame();
+</script>
