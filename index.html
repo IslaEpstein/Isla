@@ -157,33 +157,34 @@
     }
   });
 function drawSkier() {
-  // Body
+  // Body (rectangle)
   ctx.fillStyle = "#4a2b90"; // purple jacket
-  ctx.fillRect(skier.x + 10, skier.y - 20, 10, 25);
+  ctx.fillRect(skier.x, skier.y, 20, 30);
 
-  // Head
+  // Head (circle above body)
   ctx.beginPath();
-  ctx.arc(skier.x + 15, skier.y - 25, 10, 0, Math.PI * 2);
+  ctx.arc(skier.x + 10, skier.y - 10, 10, 0, Math.PI * 2);
   ctx.fillStyle = "#ffe0bd"; // skin tone
   ctx.fill();
 
-  // Helmet/goggles
+  // Helmet/goggles (black semicircle)
   ctx.beginPath();
-  ctx.arc(skier.x + 15, skier.y - 25, 10, Math.PI, 0);
+  ctx.arc(skier.x + 10, skier.y - 10, 10, Math.PI, 0);
   ctx.fillStyle = "black";
   ctx.fill();
 
-  // Skis
+  // Skis (red diagonal lines under body)
   ctx.strokeStyle = "red";
   ctx.lineWidth = 3;
+
   ctx.beginPath();
-  ctx.moveTo(skier.x, skier.y + 10);
-  ctx.lineTo(skier.x - 15, skier.y + 40);
+  ctx.moveTo(skier.x - 10, skier.y + 30);
+  ctx.lineTo(skier.x - 25, skier.y + 50);
   ctx.stroke();
 
   ctx.beginPath();
-  ctx.moveTo(skier.x + 30, skier.y + 10);
-  ctx.lineTo(skier.x + 45, skier.y + 40);
+  ctx.moveTo(skier.x + 30, skier.y + 30);
+  ctx.lineTo(skier.x + 45, skier.y + 50);
   ctx.stroke();
 }
 
@@ -193,21 +194,32 @@ function drawTrees() {
     ctx.fillStyle = "#8B4513"; // brown
     ctx.fillRect(tree.x - 5, tree.y + 20, 10, 15);
 
-    // Tree branches (stacked triangles)
+    // Tree branches (3 stacked triangles)
     ctx.fillStyle = "green";
+
     ctx.beginPath();
     ctx.moveTo(tree.x, tree.y);
-    ctx.lineTo(tree.x + 25, tree.y + 30);
-    ctx.lineTo(tree.x - 25, tree.y + 30);
+    ctx.lineTo(tree.x + 20, tree.y + 30);
+    ctx.lineTo(tree.x - 20, tree.y + 30);
     ctx.closePath();
     ctx.fill();
 
     ctx.beginPath();
     ctx.moveTo(tree.x, tree.y + 15);
-    ctx.lineTo(tree.x + 20, tree.y + 45);
-    ctx.lineTo(tree.x - 20, tree.y + 45);
+    ctx.lineTo(tree.x + 18, tree.y + 45);
+    ctx.lineTo(tree.x - 18, tree.y + 45);
     ctx.closePath();
     ctx.fill();
+
+    ctx.beginPath();
+    ctx.moveTo(tree.x, tree.y + 30);
+    ctx.lineTo(tree.x + 15, tree.y + 60);
+    ctx.lineTo(tree.x - 15, tree.y + 60);
+    ctx.closePath();
+    ctx.fill();
+  });
+}
+
 
     drawSkier();
     drawTrees();
