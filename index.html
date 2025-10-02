@@ -156,70 +156,70 @@
       if (e.key === "ArrowRight" && skier.x < canvas.width - skier.size) skier.x += 25;
     }
   });
-function drawSkier() {
-  // Body (rectangle)
-  ctx.fillStyle = "#4a2b90"; // purple jacket
-  ctx.fillRect(skier.x, skier.y, 20, 30);
 
-  // Head (circle above body)
-  ctx.beginPath();
-  ctx.arc(skier.x + 10, skier.y - 10, 10, 0, Math.PI * 2);
-  ctx.fillStyle = "#ffe0bd"; // skin tone
-  ctx.fill();
-
-  // Helmet/goggles (black semicircle)
-  ctx.beginPath();
-  ctx.arc(skier.x + 10, skier.y - 10, 10, Math.PI, 0);
-  ctx.fillStyle = "black";
-  ctx.fill();
-
-  // Skis (red diagonal lines under body)
-  ctx.strokeStyle = "red";
-  ctx.lineWidth = 3;
-
-  ctx.beginPath();
-  ctx.moveTo(skier.x - 10, skier.y + 30);
-  ctx.lineTo(skier.x - 25, skier.y + 50);
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.moveTo(skier.x + 30, skier.y + 30);
-  ctx.lineTo(skier.x + 45, skier.y + 50);
-  ctx.stroke();
-}
-
-function drawTrees() {
-  trees.forEach((tree) => {
-    // Tree trunk
-    ctx.fillStyle = "#8B4513"; // brown
-    ctx.fillRect(tree.x - 5, tree.y + 20, 10, 15);
-
-    // Tree branches (3 stacked triangles)
-    ctx.fillStyle = "green";
-
+  function drawSkier() {
+    ctx.fillStyle = skier.color;
     ctx.beginPath();
-    ctx.moveTo(tree.x, tree.y);
-    ctx.lineTo(tree.x + 20, tree.y + 30);
-    ctx.lineTo(tree.x - 20, tree.y + 30);
-    ctx.closePath();
+    ctx.arc(skier.x + skier.size / 2, skier.y, skier.size / 2, 0, Math.PI * 2);
     ctx.fill();
 
+    // little skis
+    ctx.strokeStyle = "#000";
     ctx.beginPath();
-    ctx.moveTo(tree.x, tree.y + 15);
-    ctx.lineTo(tree.x + 18, tree.y + 45);
-    ctx.lineTo(tree.x - 18, tree.y + 45);
-    ctx.closePath();
-    ctx.fill();
+    ctx.moveTo(skier.x, skier.y + 10);
+    ctx.lineTo(skier.x - 10, skier.y + 20);
+    ctx.moveTo(skier.x + skier.size, skier.y + 10);
+    ctx.lineTo(skier.x + skier.size + 10, skier.y + 20);
+    ctx.stroke();
+  }
 
-    ctx.beginPath();
-    ctx.moveTo(tree.x, tree.y + 30);
-    ctx.lineTo(tree.x + 15, tree.y + 60);
-    ctx.lineTo(tree.x - 15, tree.y + 60);
-    ctx.closePath();
-    ctx.fill();
-  });
-}
+  function drawTrees() {
+    trees.forEach((tree) => {
+      ctx.fillStyle = "green";
+      ctx.beginPath();
+      ctx.moveTo(tree.x, tree.y);
+      ctx.lineTo(tree.x + 15, tree.y + 30);
+      ctx.lineTo(tree.x - 15, tree.y + 30);
+      ctx.closePath();
+      ctx.fill();
+    });
+  }
 
+  function updateTrees() {
+    trees.forEach((tree) => {
+      tree.y += 5; // speed
+    });
+    trees = trees.filter(tree => tree.y < canvas.height);
+
+    if (Math.random() < 0.05) {
+      let x = Math.random() * (canvas.width - 30) + 15;
+      trees.push({ x: x, y: -30 });
+    }
+  }
+
+  function checkCollision() {
+    for (let tree of trees) {
+      if (
+        skier.x < tree.x + 15 &&
+        skier.x + skier.size > tree.x - 15 &&
+        skier.y < tree.y + 30 &&
+        skier.y + skier.size > tree.y
+      ) {
+        gameOver = true;
+        restartBtn.style.display = "inline-block";
+      }
+    }
+  }
+
+  function gameLoop() {
+    if (gameOver) {
+      ctx.fillStyle = "red";
+      ctx.font = "30px Arial";
+      ctx.fillText("Game Over!", 120, 250);
+      return;
+    }
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     drawSkier();
     drawTrees();
